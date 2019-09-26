@@ -1,50 +1,77 @@
 $(document).ready(function() {
     // step 1 form
-    var f_name = $('#first_name');
-    if(f_name == ''){
-        f_name.attr('required','required')
-    } else {
-        f_name = f_name.val();
-    }
-    
-    var f_name_error = $('#first_name_error');
-    var l_name = $('#last_name').val();
-    var l_name_error = $('#last_name_error');
-    var email = $('#email').val();
-    var email_error = $('#email_error');
 
-    function validateFirstName(f_name) {
-        let f_name_pattern = /^[\S\D]?\w+/gi;
-        let f_bool = f_name_pattern.test(f_name);
-        console.log(f_bool);
-    }
-    function validateLastName(l_name) {
-        let l_name_pattern = /^[\S\D]?\w+/gi;
-        let l_bool = l_name_pattern.test(l_name);
-        return l_bool;
-    }
-    function validateEmail(email){
-        let email_pattern = /^[\S\D]\w+@\w+.\w+/;
-        let e_bool = email_pattern.test(email);
-        return e_bool;
-    }
-    console.log(validateEmail(email))
+    let f_name = $('#first_name');
+    let email = $('#email');
+    let contact = $('#contact');
+    let country = $('#country');
+    let select = $('#select_program option:selected');
+    
+    let message = $('#message');
+    let valid = false;
+
     $('#StepOneNext').click(function(e){
-        e.preventDefault()
-        if(!validateFirstName(f_name)){
-            f_name_error.css('display','block');
-        }
-        if(!validateLastName(l_name)){
-            l_name_error.css('display','block');
-        }
-        if(!validateEmail(email)){
-            email_error.css('display','block');
-        }
+        e.preventDefault();
+        let namePattern = /^[\S\D\w]*[\S\w]?$/gi;
+        valid = namePattern.test(f_name.val());
         
+        valid = false;
+        let emailPattern = /^[\S\w][\w?]{0,}.[\w]{0,}.[\S\w]{0,3}$/gi;    
+        valid = emailPattern.test(email.val());
+        
+        if (valid) {
+            $('#StepOneContainer').css('display','none');
+            $('#StepTwoContainer').css('display','block');
+        } else{
+            $('.ErrorText').css('display','block');
+        }               
     });
-    
+    $('#StepTwoPrevious').click(function (e) {
+        e.preventDefault();
+        $('#StepOneContainer').css('display','block');
+        $('#StepTwoContainer').css('display','none');
+    })
+    $('#StepTwoNext').click(function (e) {
+        e.preventDefault();
+        let countryPattern = /^[\S\D\w]*[\S\w]?$/gi;
+        let numberPattern =  /^[\S+]{0}[\d?]{0,}[\S\d]{0,15}$/gi;
+
+        valid = false;
+        valid = numberPattern.test(contact.val());       
+
+        valid = false;
+        valid = countryPattern.test(country.val());
         
-    
-    
- 
+        if (valid) {
+            $('#StepTwoContainer').css('display','none');
+            $('#StepThreeContainer').css('display','block');
+        } else {
+            $('.ErrorText').css('display','block');
+        }
+        $('#StepThreePrevious').click(function (e) {
+            e.preventDefault();
+            $('#StepTwoContainer').css('display','block');
+            $('#StepThreeContainer').css('display','none');            
+        })
+        $('#StepThreeSubmit').click(function (e) {
+            e.preventDefault();
+
+            let msgPattern = /^[\w]{0,51}$/gi;
+            let selectPattern = /^[\w]*$/gi;
+
+            valid = false;
+            valid = msgPattern.test(message.val());
+
+            valid = false;
+            valid = selectPattern.test(select.val());
+           
+            if (valid) {
+                $('#SuccessContainer').css('display','block');
+                $('#StepThreeContainer').css('display','none');  
+            } else {
+                $('.ErrorText').css('display','block');
+            }
+            
+        })
+    })
 })
